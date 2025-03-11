@@ -7,10 +7,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.terrakok.modo.Modo.rememberRootScreen
+import com.github.terrakok.modo.NavModel
+import com.github.terrakok.modo.RootScreen
+import com.github.terrakok.modo.stack.DefaultStackScreen
+import com.github.terrakok.modo.stack.StackNavModel
+import com.sanya1am.consecutivepractices.profile.presentation.screens.MainTabScreen
 import com.sanya1am.consecutivepractices.ui.theme.ConsecutivePracticesTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,30 +26,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ConsecutivePracticesTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+            val rootScreen: RootScreen<DefaultStackScreen> = rememberRootScreen {
+                DefaultStackScreen(
+                    StackNavModel(
+                        MainTabScreen()
                     )
+                )
+            }
+
+            ConsecutivePracticesTheme {
+                Surface(color = Color.White) {
+                    rootScreen.Content(modifier = Modifier.fillMaxSize())
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ConsecutivePracticesTheme {
-        Greeting("Android")
     }
 }
