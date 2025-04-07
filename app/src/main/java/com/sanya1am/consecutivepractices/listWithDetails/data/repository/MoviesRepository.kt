@@ -1,9 +1,24 @@
 package com.sanya1am.consecutivepractices.listWithDetails.data.repository
 
-import com.sanya1am.consecutivepractices.listWithDetails.data.mock.MoviesData
+import com.sanya1am.consecutivepractices.listWithDetails.data.api.MovieApi
+import com.sanya1am.consecutivepractices.listWithDetails.data.mapper.MovieResponseToEntityMapper
+import com.sanya1am.consecutivepractices.listWithDetails.domain.entity.MovieFullEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class MoviesRepository {
-    fun getList(q: String = "") = MoviesData.moviesShort.filter { it.name.contains(q, ignoreCase = true) }
+class MoviesRepository(
+    private val api: MovieApi,
+    private val mapper: MovieResponseToEntityMapper
+) {
+    suspend fun getList(q: String) =
+        withContext(Dispatchers.IO) {
+            val response = api.getMovies(q)
+            mapper.mapToShortsEntity(response)
+        }
 
-    fun getById(id: String) = MoviesData.moviesFull.find { it.id == id }
+    suspend fun getById(id: String): MovieFullEntity =
+        withContext(Dispatchers.IO) {
+            val response = api.getMovie(id)
+            mapper.mapToFullEntity(response)
+        }
 }

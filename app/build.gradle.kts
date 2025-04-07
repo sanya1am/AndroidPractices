@@ -1,9 +1,19 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
 }
+
+val localProperties = Properties().apply {
+    val localFile = rootProject.file("local.properties")
+    if (localFile.exists()) {
+        load(localFile.inputStream())
+    }
+}
+val kinoApiKey = localProperties.getProperty("KINOPOISK_API_KEY") ?: ""
 
 android {
     namespace = "com.sanya1am.consecutivepractices"
@@ -17,6 +27,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "KINOPOISK_API_KEY", kinoApiKey)
     }
 
     buildTypes {
@@ -37,6 +49,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -65,4 +78,10 @@ dependencies {
     implementation(libs.koin.compose)
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.gson)
+    debugImplementation(libs.chucker)
+    releaseImplementation(libs.chucker.no.op)
 }

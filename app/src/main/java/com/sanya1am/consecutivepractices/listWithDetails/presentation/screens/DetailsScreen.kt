@@ -1,8 +1,6 @@
 package com.sanya1am.consecutivepractices.listWithDetails.presentation.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,15 +12,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -31,29 +25,30 @@ import com.github.terrakok.modo.Screen
 import com.github.terrakok.modo.ScreenKey
 import com.github.terrakok.modo.generateScreenKey
 import com.github.terrakok.modo.stack.LocalStackNavigation
-import com.github.terrakok.modo.stack.StackNavContainer
-import com.sanya1am.consecutivepractices.listWithDetails.domain.entity.MovieFullEntity
 import com.sanya1am.consecutivepractices.listWithDetails.presentation.state.MovieDetailState
 import com.sanya1am.consecutivepractices.listWithDetails.presentation.viewModel.DetailsViewModel
-import com.sanya1am.consecutivepractices.ui.components.EmptyDataBox
 import com.sanya1am.consecutivepractices.ui.components.RatingBox
 import com.sanya1am.consecutivepractices.ui.components.SimpleAppBar
 import com.sanya1am.consecutivepractices.ui.theme.Spacing
 import kotlinx.parcelize.Parcelize
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import com.sanya1am.consecutivepractices.R
+import com.sanya1am.consecutivepractices.ui.components.FullscreenLoading
+import com.sanya1am.consecutivepractices.ui.components.FullscreenMessage
+
 
 @Parcelize
 class DetailsScreen (
     override val screenKey: ScreenKey = generateScreenKey(),
-    val modieId: String
+    val movieId: String
 ) : Screen {
 
     @Composable
     override fun Content(modifier: Modifier) {
         val navigation = LocalStackNavigation.current
 
-        val viewModel = koinViewModel<DetailsViewModel>() { parametersOf(navigation, modieId) }
+        val viewModel = koinViewModel<DetailsViewModel> { parametersOf(navigation, movieId) }
         val state = viewModel.viewState
 
         MovieScreenContent(
@@ -74,10 +69,17 @@ private fun MovieScreenContent(
         topBar = { SimpleAppBar(state.movie?.name.orEmpty(), onBackPressed) },
         containerColor = MaterialTheme.colorScheme.background
     ) {
-        val movie = state.movie ?: run {
-            EmptyDataBox("По запросу нет результатов")
+        if (state.isLoading) {
+            FullscreenLoading()
             return@Scaffold
         }
+
+        state.error?.let {
+            FullscreenMessage(msg = it)
+            return@Scaffold
+        }
+
+        val movie = state.movie ?: return@Scaffold
 
         Column(
             modifier = Modifier
@@ -96,7 +98,7 @@ private fun MovieScreenContent(
                 ) {
 
                     AsyncImage(
-                        model = movie.posterUrl,
+                        model = movie.poster.url,
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -118,7 +120,7 @@ private fun MovieScreenContent(
                     Spacer(modifier = Modifier.height(Spacing.small))
 
                     Text(
-                        text = "Год: ${movie.year}",
+                        text = stringResource(R.string.movie_year, movie.year),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.secondary
                     )
@@ -133,9 +135,9 @@ private fun MovieScreenContent(
 
                     Spacer(modifier = Modifier.height(Spacing.small))
 
-                    movie.ageRating?.let {
+                    if (movie.ageRating.isNotEmpty()) {
                         Text(
-                            text = "Возраст: $it",
+                            text = stringResource(R.string.movie_age, movie.ageRating),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.secondary
                         )
@@ -152,23 +154,22 @@ private fun MovieScreenContent(
                     horizontalArrangement = Arrangement.spacedBy(Spacing.small),
                     modifier = Modifier.padding(top = Spacing.small)
                 ) {
-                    RatingBox(text = "КиноПоиск: ${movie.rating.kp}")
-                    RatingBox(text = "IMDb: ${movie.rating.imdb}")
+                    RatingBox(text = stringResource(R.string.movie_rating_kp, movie.rating.kp))
+                    RatingBox(text = stringResource(R.string.movie_rating_imdb, movie.rating.imdb))
                 }
 
                 Spacer(modifier = Modifier.height(Spacing.medium))
 
-                movie.movieLength?.let {
+                if (movie.movieLength.isNotEmpty()) {
                     Text(
-                        text = "Длительность: $it мин",
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = stringResource(R.string.movie_length, movie.movieLength),
+                        style = MaterialTheme.typography.bodyMedium
                     )
-
                     Spacer(modifier = Modifier.height(Spacing.small))
                 }
 
                 Text(
-                    text = "Жанры: ${movie.genres.joinToString(", ")}",
+                    text = stringResource(R.string.movie_genres, movie.genres.joinToString(", ")),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = Spacing.small)
                 )
@@ -176,20 +177,20 @@ private fun MovieScreenContent(
                 Spacer(modifier = Modifier.height(Spacing.small))
 
                 Text(
-                    text = "Страны: ${movie.countries.joinToString(", ")}",
+                    text = stringResource(R.string.movie_countries, movie.countries.joinToString(", ")),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
             Spacer(modifier = Modifier.height(Spacing.medium))
 
-            movie.description?.let {
+            if (movie.description.isNotEmpty()) {
                 Card (
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.medium
                 ) {
                     Text(
-                        text = it,
+                        text = movie.description,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(Spacing.medium)
                     )
