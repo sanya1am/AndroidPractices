@@ -1,5 +1,6 @@
 package com.sanya1am.consecutivepractices.profile.presentation.screens
 
+import android.content.Context
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +26,7 @@ import com.github.terrakok.modo.multiscreen.MultiScreenNavModel
 import com.github.terrakok.modo.multiscreen.selectScreen
 import kotlinx.parcelize.Parcelize
 import androidx.compose.ui.unit.dp
+import com.sanya1am.consecutivepractices.R
 import com.sanya1am.consecutivepractices.listWithDetails.presentation.screens.ListScreen
 import com.sanya1am.consecutivepractices.profile.presentation.screens.ProfileScreen
 import com.sanya1am.consecutivepractices.ui.theme.PrimaryColor
@@ -103,6 +105,6 @@ enum class MainTabs(
     val icon: ImageVector,
     val title: String
 ) {
-    LIST(Icons.AutoMirrored.Rounded.List, "List"),
-    PROFILE(Icons.Default.Face, "Profile")
+    LIST(Icons.AutoMirrored.Rounded.List, "list"),
+    PROFILE(Icons.Default.Face, "profile")
 }
