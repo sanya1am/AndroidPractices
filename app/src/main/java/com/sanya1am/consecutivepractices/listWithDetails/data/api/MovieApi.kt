@@ -10,7 +10,7 @@ interface MovieApi {
     @GET("movie/search")
     suspend fun getMovies(
         @Query("query") query: String = "",
-        @Query("limit") limit: String = "30",
+        @Query("limit") limit: String = "70",
         @Query("status") status: String = "completed",
     ) : MovieSearchResponse
 

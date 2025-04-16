@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
+    id("com.google.devtools.ksp") version "2.1.20-1.0.32"
 }
 
 val localProperties = Properties().apply {
@@ -56,6 +57,7 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -84,4 +86,9 @@ dependencies {
     implementation(libs.gson)
     debugImplementation(libs.chucker)
     releaseImplementation(libs.chucker.no.op)
+
+    implementation(libs.androidx.room.runtime)
+    ksp("androidx.room:room-compiler:2.5.0")
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }

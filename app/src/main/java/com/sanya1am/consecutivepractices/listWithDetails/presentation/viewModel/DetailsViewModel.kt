@@ -11,8 +11,8 @@ import com.github.terrakok.modo.stack.back
 import com.sanya1am.consecutivepractices.core.coroutinesUtils.launchLoadingAndError
 import com.sanya1am.consecutivepractices.listWithDetails.data.repository.MoviesRepository
 import com.sanya1am.consecutivepractices.listWithDetails.domain.entity.MovieFullEntity
-import com.sanya1am.consecutivepractices.listWithDetails.domain.entity.MovieShortEntity
 import com.sanya1am.consecutivepractices.listWithDetails.presentation.state.MovieDetailState
+import kotlinx.coroutines.launch
 
 class DetailsViewModel(
     private val repository: MoviesRepository,
