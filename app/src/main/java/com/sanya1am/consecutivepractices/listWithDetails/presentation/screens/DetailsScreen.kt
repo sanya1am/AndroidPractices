@@ -34,6 +34,7 @@ import kotlinx.parcelize.Parcelize
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import com.sanya1am.consecutivepractices.R
+import com.sanya1am.consecutivepractices.listWithDetails.domain.entity.MovieShortEntity
 import com.sanya1am.consecutivepractices.ui.components.FullscreenLoading
 import com.sanya1am.consecutivepractices.ui.components.FullscreenMessage
 
@@ -53,7 +54,7 @@ class DetailsScreen (
 
         MovieScreenContent(
             state,
-            onBackPressed = { viewModel.back() }
+            onBackPressed = { viewModel.back() },
         )
     }
 }
@@ -66,7 +67,10 @@ private fun MovieScreenContent(
     val scrollState = rememberScrollState()
 
     Scaffold(
-        topBar = { SimpleAppBar(state.movie?.name.orEmpty(), onBackPressed) },
+        topBar = { SimpleAppBar(
+            state.movie?.name.orEmpty(),
+            onBackPressed
+        ) },
         containerColor = MaterialTheme.colorScheme.background
     ) {
         if (state.isLoading) {
@@ -98,7 +102,7 @@ private fun MovieScreenContent(
                 ) {
 
                     AsyncImage(
-                        model = movie.poster.url,
+                        model = movie.url,
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop

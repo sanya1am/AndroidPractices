@@ -13,17 +13,13 @@ class MovieFullEntity(
 //    val totalSeriesLength: String = "",
 //    val seriesLength: String?,
     val ageRating: String = "",
-    val poster: PosterEntity,
+    val url: String,
     val genres: List<String>,
     val countries: List<String>,
 ) {
     class RatingEntity(
         val kp: String,
         val imdb: String,
-    )
-    class PosterEntity(
-        val url: String,
-        val previewUrl: String,
     )
 }
 

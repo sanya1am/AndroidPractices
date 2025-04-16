@@ -8,7 +8,7 @@ class MovieShortEntity (
     val name: String,
     val year: String,
     val type: MovieType,
-    val poster: MovieFullEntity.PosterEntity
+    val previewUrl: String
 )
 
 enum class MovieType(@StringRes val stringRes: Int) {
@@ -16,10 +16,10 @@ enum class MovieType(@StringRes val stringRes: Int) {
     @SerializedName("tv-series") TV_SERIES(R.string.tv_series),
     @SerializedName("cartoon") CARTOON(R.string.cartoon),
     @SerializedName("anime") ANIME(R.string.anime),
-    @SerializedName("animated-series") ANIMATED_SERIES(R.string.animated_series),
-    OTHER(R.string.other);
+    @SerializedName("animated-series") ANIMATED_SERIES(R.string.animated_series);
+//    OTHER(R.string.other);
 
     companion object {
-        fun getByValue(type: String?) = entries.find { it.name.equals(type?.replace("-", "_"), ignoreCase = true) } ?: OTHER
+        fun getByValue(type: String?) = entries.find { it.name.equals(type?.replace("-", "_"), ignoreCase = true) } ?: MOVIE
     }
 }
