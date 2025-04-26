@@ -15,4 +15,7 @@
     <string name="movie_genres">Жанры: %s</string>
     <string name="movie_countries">Страны: %s</string>
     <string name="search">Поиск</string>
+    <string name="dismiss">Отклонить</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="my_movies">Мои фильмы</string>
 </resources>

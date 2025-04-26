@@ -11,7 +11,7 @@ class MovieResponseToEntityMapper {
         return MovieFullEntity(
             id = response.id.orEmpty(),
             name = response.name.orEmpty(),
-            type = MovieType.getByValue(response.type),
+            type = MovieType.getByValue(response.type) ?: MovieType.MOVIE,
             description = response.description.orEmpty(),
             year = response.year.orEmpty(),
             shortDescription = response.shortDescription.orEmpty(),
@@ -22,10 +22,7 @@ class MovieResponseToEntityMapper {
             ),
             movieLength = response.movieLength.orEmpty(),
             ageRating = response.ageRating.orEmpty(),
-            poster = MovieFullEntity.PosterEntity(
-                url = response.poster?.url ?: "",
-                previewUrl = response.poster?.previewUrl ?: "",
-            ),
+            url = response.poster?.url.orEmpty(),
             genres = response.genres?.map { it.name } ?: emptyList(),
             countries = response.countries?.map { it.name } ?: emptyList(),
         )
@@ -37,11 +34,8 @@ class MovieResponseToEntityMapper {
                 id = movie.id.orEmpty(),
                 name = movie.name.orEmpty(),
                 year = movie.year.orEmpty(),
-                type = MovieType.getByValue(movie.type),
-                poster = MovieFullEntity.PosterEntity(
-                    url = movie.poster?.url.orEmpty(),
-                    previewUrl = movie.poster?.previewUrl.orEmpty(),
-                ),
+                type = MovieType.getByValue(movie.type) ?: MovieType.MOVIE,
+                previewUrl = movie.poster?.previewUrl.orEmpty()
             )
         }.orEmpty()
     }
