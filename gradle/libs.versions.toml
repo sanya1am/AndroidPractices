@@ -1,6 +1,6 @@
 [versions]
 agp = "8.8.2"
-datastorePreferences = "1.1.4"
+datastore = "1.1.4"
 kotlin = "2.1.20"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -19,10 +19,12 @@ retrofit = "2.11.0"
 gson = "2.11.0"
 chucker = "4.1.0"
 room = "2.6.1"
+protobufJavalite = "4.30.2"
+protobufKotlinLite = "4.30.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -54,6 +56,10 @@ chucker-no-op = { module = "com.github.chuckerteam.chucker:library-no-op", versi
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+
+protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobufJavalite" }
+protobuf-kotlin-lite = { module = "com.google.protobuf:protobuf-kotlin-lite", version.ref = "protobufKotlinLite" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

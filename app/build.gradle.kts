@@ -1,4 +1,5 @@
 import java.util.Properties
+import com.google.protobuf.gradle.id
 
 plugins {
     alias(libs.plugins.android.application)
@@ -6,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
     id("com.google.devtools.ksp") version "2.1.20-1.0.32"
+    id("com.google.protobuf") version "0.9.4"
 }
 
 val localProperties = Properties().apply {
@@ -52,6 +54,24 @@ android {
         compose = true
         buildConfig = true
     }
+
+    protobuf {
+        protoc {
+            artifact = "com.google.protobuf:protoc:3.24.1"
+        }
+        generateProtoTasks {
+            all().forEach { task ->
+                task.builtins {
+                    id("java") {
+                        option("lite")
+                    }
+                    id("kotlin") {
+                        option("lite")
+                    }
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -91,4 +111,8 @@ dependencies {
     ksp("androidx.room:room-compiler:2.5.0")
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    implementation(libs.androidx.datastore)
+    implementation(libs.protobuf.javalite)
+    implementation(libs.protobuf.kotlin.lite)
 }

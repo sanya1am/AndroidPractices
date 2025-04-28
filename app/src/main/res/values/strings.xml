@@ -18,4 +18,7 @@
     <string name="dismiss">Отклонить</string>
     <string name="confirm">Подтвердить</string>
     <string name="my_movies">Мои фильмы</string>
+    <string name="profile">Профиль</string>
+    <string name="name">Имя</string>
+    <string name="open_doc">Открыть документ</string>
 </resources>
