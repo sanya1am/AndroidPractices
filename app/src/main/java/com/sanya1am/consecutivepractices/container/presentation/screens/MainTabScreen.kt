@@ -1,15 +1,13 @@
-package com.sanya1am.consecutivepractices.profile.presentation.screens
+package com.sanya1am.consecutivepractices.favorites.presentation.screens
 
-import android.content.Context
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.List
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,8 +23,6 @@ import com.github.terrakok.modo.multiscreen.MultiScreen
 import com.github.terrakok.modo.multiscreen.MultiScreenNavModel
 import com.github.terrakok.modo.multiscreen.selectScreen
 import kotlinx.parcelize.Parcelize
-import androidx.compose.ui.unit.dp
-import com.sanya1am.consecutivepractices.R
 import com.sanya1am.consecutivepractices.listWithDetails.presentation.screens.ListScreen
 import com.sanya1am.consecutivepractices.profile.presentation.screens.ProfileScreen
 import com.sanya1am.consecutivepractices.ui.theme.PrimaryColor
@@ -35,6 +31,7 @@ import com.sanya1am.consecutivepractices.ui.theme.PrimaryColor
 class MainTabScreen(
     private val navModel: MultiScreenNavModel = MultiScreenNavModel(
         ListScreen(),
+        FavoritesScreen(),
         ProfileScreen(),
         selected = 0
     )
@@ -106,5 +103,6 @@ enum class MainTabs(
     val title: String
 ) {
     LIST(Icons.AutoMirrored.Rounded.List, "list"),
+    FAVORITES(Icons.Default.FavoriteBorder, "favorites"),
     PROFILE(Icons.Default.Face, "profile")
 }
