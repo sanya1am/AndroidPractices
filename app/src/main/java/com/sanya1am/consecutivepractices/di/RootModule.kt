@@ -24,22 +24,17 @@ import org.koin.dsl.module
 val rootModule = module {
 
     single { getDataStore(androidContext = androidContext()) }
-
     single<MoviesRepository> { MoviesRepository(get(), get(), get()) }
+    single<IProfileRepository> { ProfileRepository() }
 
     factory { MovieResponseToEntityMapper() }
+    factory<DataStore<ProfileEntity>>(named("profile")) { DataSourceProvider(get()).provide() }
 
     viewModel { ListViewModel(get(), it.get()) }
     viewModel { DetailsViewModel(get(), it.get(), it.get()) }
     viewModel { FavoritesViewModel(get()) }
-
-    factory<DataStore<ProfileEntity>>(named("profile")) { DataSourceProvider(get()).provide() }
-
-    single<IProfileRepository> { ProfileRepository() }
-
     viewModel { ProfileViewModel(get()) }
-
-    viewModel { EditProfileViewModel(get()) }
+    viewModel { EditProfileViewModel(get(), it.get()) }
 }
 
 fun getDataStore(androidContext: Context): DataStore<Preferences> =
