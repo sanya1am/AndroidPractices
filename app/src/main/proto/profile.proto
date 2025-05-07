@@ -7,4 +7,6 @@ message ProfileEntity {
   string name = 1;
   string photo_uri = 2;
   string document_url = 3;
+  string notif_time = 4;
+  string notif_date = 5;
 }

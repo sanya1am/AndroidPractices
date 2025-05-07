@@ -20,14 +20,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,14 +56,14 @@ import com.github.terrakok.modo.Screen
 import com.github.terrakok.modo.ScreenKey
 import com.github.terrakok.modo.generateScreenKey
 import com.github.terrakok.modo.stack.LocalStackNavigation
-import com.github.terrakok.modo.stack.back
-import com.github.terrakok.modo.stack.forward
 import com.sanya1am.consecutivepractices.R
 import com.sanya1am.consecutivepractices.profile.presentation.viewModel.EditProfileViewModel
-import com.sanya1am.consecutivepractices.profile.presentation.viewModel.ProfileViewModel
 import com.sanya1am.consecutivepractices.ui.theme.Spacing
 import kotlinx.parcelize.Parcelize
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
 import java.io.File
 import java.util.Date
 
@@ -69,7 +76,7 @@ class EditProfileScreen (
     override fun Content(modifier: Modifier) {
         val navigation = LocalStackNavigation.current
 
-        val viewModel = koinViewModel<EditProfileViewModel>()
+        val viewModel = koinViewModel<EditProfileViewModel> { parametersOf(navigation) }
         val state = viewModel.viewState
 
         val context = LocalContext.current
@@ -92,14 +99,14 @@ class EditProfileScreen (
 
         val requestPermissionLauncher =
             rememberLauncherForActivityResult(
-                ActivityResultContracts.RequestPermission()
-            ) { isGranted: Boolean ->
-                if (!isGranted) {
+                ActivityResultContracts.RequestMultiplePermissions()
+            ) { map: Map<String, Boolean> ->
+                if (map.values.contains(false)) {
                     val dialog = AlertDialog.Builder(context)
-                        .setMessage("Для работы приложения нужно разрешение")
+                        .setMessage(context.getString(R.string.needs_permission))
                         .setCancelable(false)
-                        .setPositiveButton("OK") { _, _ ->
-                            navigation.back()
+                        .setPositiveButton(context.getString(R.string.ok)) { _, _ ->
+                            viewModel.back()
                         }
 
                     dialog.show()
@@ -120,10 +127,7 @@ class EditProfileScreen (
                             contentDescription = null,
                             Modifier
                                 .padding(end = 8.dp)
-                                .clickable {
-                                    viewModel.onDoneClicked()
-                                    navigation.back()
-                                }
+                                .clickable { viewModel.onDoneClicked() }
                         )
                     },
                     navigationIcon = {
@@ -132,7 +136,7 @@ class EditProfileScreen (
                             contentDescription = null,
                             Modifier
                                 .padding(end = 8.dp)
-                                .clickable { navigation.back() }
+                                .clickable { viewModel.back() }
                         )
                     }
                 )
@@ -167,11 +171,115 @@ class EditProfileScreen (
                 TextField(
                     value = state.documentUrl,
                     onValueChange = { viewModel.onDocumentChanged(it) },
-                    label = { Text("url *.pdf") },
+                    label = { Text(stringResource(R.string.url_pdf)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = Spacing.small)
                 )
+
+                TextField(
+                    value = state.notifTimeString,
+                    onValueChange = { viewModel.onTimeChanged(it) },
+                    label = { Text(stringResource(R.string.time_text)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = Spacing.small),
+                    isError = state.notifTimeError != null,
+                    trailingIcon = {
+                        Icon(
+                            painter =  painterResource(id = R.drawable.time),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clickable { viewModel.onTimeInputClicked() }
+                        )
+                    }
+                )
+
+                state.notifTimeError?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+
+                TextField(
+                    value = state.notifDateString,
+                    onValueChange = { viewModel.onDateChanged(it) },
+                    label = { Text(stringResource(R.string.date_text)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = Spacing.small),
+                    readOnly = true,
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.calendar),
+                            contentDescription = null,
+                            modifier = Modifier.clickable { viewModel.onDateInputClicked() }
+                        )
+                    }
+                )
+            }
+        }
+
+        if (state.isShowTimePicker) {
+            val timePickerState = rememberTimePickerState(
+                initialHour = state.notifTime.hour,
+                initialMinute = state.notifTime.minute,
+                is24Hour = true
+            )
+
+            AlertDialog(
+                onDismissRequest = { viewModel.onTimeCanceled() },
+                dismissButton = {
+                    TextButton(onClick = { viewModel.onTimeCanceled() } ) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { viewModel.onTimeConfirmed(timePickerState.hour, timePickerState.minute) }) {
+                        Text(stringResource(R.string.ok))
+                    }
+                },
+                text = { TimePicker(state = timePickerState) }
+            )
+        }
+
+        if (state.isShowDatePicker) { // ?
+            val datePickerState = rememberDatePickerState(
+                initialSelectedDateMillis = state.notifDate
+                    .atStartOfDay(ZoneId.systemDefault())
+                    .toInstant()
+                    .toEpochMilli()
+            )
+
+            DatePickerDialog(
+                onDismissRequest = { viewModel.onDateCanceled() },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                val date = Instant.ofEpochMilli(millis)
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate()
+
+                                viewModel.onDateConfirmed(
+                                    date.year,
+                                    date.monthValue, // monthValue = 1..12
+                                    date.dayOfMonth
+                                )
+                            }
+                        }
+                    ) {
+                        Text(stringResource(R.string.ok))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { viewModel.onDateCanceled() }) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                }
+            ) {
+                DatePicker(state = datePickerState)
             }
         }
 
@@ -197,7 +305,7 @@ class EditProfileScreen (
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
                         Text(
-                            text = "Камера",
+                            text = stringResource(R.string.camera),
                             modifier = Modifier
                                 .clickable {
                                     onCameraSelected()
@@ -205,7 +313,7 @@ class EditProfileScreen (
                                 }
                         )
                         Text(
-                            text = "Галерея",
+                            text = stringResource(R.string.gallery),
                             modifier = Modifier
                                 .clickable {
                                     pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -219,18 +327,26 @@ class EditProfileScreen (
 
         if (state.isShowPermissionDialog) {
             LaunchedEffect(Unit) {
-                if (
-                    android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q &&
+                val permissions = mutableListOf<String>()
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q &&
                     ContextCompat.checkSelfPermission(
                         context,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
-                    requestPermissionLauncher.launch(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    )
+                    permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
 
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU &&
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+                }
+
+                requestPermissionLauncher.launch(permissions.toTypedArray())
             }
         }
     }
