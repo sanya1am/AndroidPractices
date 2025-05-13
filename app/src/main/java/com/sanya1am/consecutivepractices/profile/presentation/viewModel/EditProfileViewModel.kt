@@ -6,10 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.modo.stack.StackNavContainer
@@ -26,6 +28,8 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
+import java.io.File
+import java.util.Date
 
 class EditProfileViewModel(
     private val repository: IProfileRepository,
@@ -86,6 +90,22 @@ class EditProfileViewModel(
         mutableState.isShowSelectDialog = false
     }
 
+    fun onCameraLaunchHandled() {
+        mutableState.shouldLaunchCamera = false
+    }
+
+    fun onCameraSelected() {
+        val baseDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val pictureFile = File(baseDir, "picture_${Date().time}.jpg")
+        val uri = FileProvider.getUriForFile(
+            context,
+            context.packageName + ".provider",
+            pictureFile
+        )
+        mutableState.tempImageUri = uri
+        mutableState.shouldLaunchCamera = true
+    }
+
     fun onImageSelected(uri: Uri?) {
         uri?.let { mutableState.photoUri = it }
     }
@@ -139,7 +159,6 @@ class EditProfileViewModel(
     private fun saveNotification() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-//        val dateTime = LocalDateTime.of(LocalDate.now(), viewState.notifTime)
         val dateTime = LocalDateTime.of(viewState.notifDate, viewState.notifTime)
         val timeInMillis = dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
@@ -206,6 +225,10 @@ class EditProfileViewModel(
     private class MutableEditProfileState : EditProfileState {
         override var name by mutableStateOf("")
         override var photoUri: Uri by mutableStateOf(Uri.EMPTY)
+
+        override var shouldLaunchCamera by mutableStateOf(false)
+        override var tempImageUri: Uri? by mutableStateOf(null)
+
         override var documentUrl by mutableStateOf("")
         override var notifTime: LocalTime by mutableStateOf(LocalTime.now())
         override var notifTimeString by mutableStateOf("")
