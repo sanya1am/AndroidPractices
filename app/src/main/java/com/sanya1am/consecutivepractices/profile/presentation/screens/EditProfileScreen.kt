@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
@@ -50,7 +49,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import coil3.compose.AsyncImage
 import com.github.terrakok.modo.Screen
 import com.github.terrakok.modo.ScreenKey
@@ -64,8 +62,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
-import java.io.File
-import java.util.Date
 
 @Parcelize
 class EditProfileScreen (
@@ -96,6 +92,13 @@ class EditProfileScreen (
             }
         }
 
+        LaunchedEffect(state.shouldLaunchCamera) {
+            if (state.shouldLaunchCamera && state.tempImageUri != null) {
+                imageUri = state.tempImageUri
+                imageUri?.let { mGetContent.launch(it) }
+                viewModel.onCameraLaunchHandled()
+            }
+        }
 
         val requestPermissionLauncher =
             rememberLauncherForActivityResult(
@@ -283,20 +286,6 @@ class EditProfileScreen (
             }
         }
 
-        fun onCameraSelected() {
-            val baseDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES
-            )
-            val pictureFile = File(baseDir, "picture_${Date().time}.jpg")
-            imageUri = FileProvider.getUriForFile(
-                context,
-                context.packageName + ".provider",
-                pictureFile
-            )
-            imageUri?.let { mGetContent.launch(it) }
-        }
-
-
         if (state.isShowSelectDialog) {
             Dialog(onDismissRequest = { viewModel.onSelectDismiss() }) {
                 Surface (
@@ -308,7 +297,7 @@ class EditProfileScreen (
                             text = stringResource(R.string.camera),
                             modifier = Modifier
                                 .clickable {
-                                    onCameraSelected()
+                                    viewModel.onCameraSelected()
                                     viewModel.onSelectDismiss()
                                 }
                         )
