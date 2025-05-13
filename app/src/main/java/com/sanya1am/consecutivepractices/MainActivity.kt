@@ -14,8 +14,8 @@ import com.github.terrakok.modo.RootScreen
 import com.github.terrakok.modo.stack.DefaultStackScreen
 import com.github.terrakok.modo.stack.StackNavModel
 import com.sanya1am.consecutivepractices.favorites.presentation.screens.MainTabScreen
-import com.sanya1am.consecutivepractices.profile.presentation.channelManager.NotificationChannelManager
-import com.sanya1am.consecutivepractices.ui.theme.ConsecutivePracticesTheme
+import com.sanya1am.profile.presentation.channelManager.NotificationChannelManager
+import com.sanya1am.uikit.ui.theme.ConsecutivePracticesTheme
 
 class MainActivity : ComponentActivity() {
     private val channelManager: NotificationChannelManager by lazy {

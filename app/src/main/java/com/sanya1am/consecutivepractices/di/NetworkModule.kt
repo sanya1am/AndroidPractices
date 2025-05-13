@@ -1,10 +1,8 @@
 package com.sanya1am.consecutivepractices.di
 
 import android.content.Context
-import androidx.core.os.BuildCompat
 import com.chuckerteam.chucker.api.ChuckerInterceptor
-import com.google.gson.internal.GsonBuildConfig
-import com.sanya1am.consecutivepractices.listWithDetails.data.api.MovieApi
+import com.sanya1am.impl.data.api.MovieApi
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

@@ -117,4 +117,11 @@ dependencies {
     implementation(libs.protobuf.kotlin.lite)
 
     implementation(libs.threetenabp)
+
+    implementation(project(":core"))
+    implementation(project(":uikit"))
+    implementation(project(":feature:favorites"))
+    implementation(project(":feature:movies:api"))
+    implementation(project(":feature:movies:impl"))
+    implementation(project(":feature:profile"))
 }

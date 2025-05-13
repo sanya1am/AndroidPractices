@@ -1,35 +1,3 @@
 <resources>
     <string name="app_name">ConsecutivePractices</string>
-    <string name="movie">Фильм</string>
-    <string name="tv_series">Сериал</string>
-    <string name="anime">Аниме</string>
-    <string name="cartoon">Мультфильм</string>
-    <string name="animated_series">Мультсериал</string>
-    <string name="other">Другое</string>
-
-    <string name="movie_year">Год: %s</string>
-    <string name="movie_age">Возраст: %s</string>
-    <string name="movie_rating_kp">КиноПоиск: %s</string>
-    <string name="movie_rating_imdb">IMDb: %s</string>
-    <string name="movie_length">Длительность: %s мин</string>
-    <string name="movie_genres">Жанры: %s</string>
-    <string name="movie_countries">Страны: %s</string>
-    <string name="search">Поиск</string>
-    <string name="dismiss">Отклонить</string>
-    <string name="confirm">Подтвердить</string>
-    <string name="my_movies">Мои фильмы</string>
-    <string name="profile">Профиль</string>
-    <string name="name">Имя</string>
-    <string name="open_doc">Открыть документ</string>
-    <string name="notifications_channel_id">notifications_channel</string>
-    <string name="notifications_channel_name">Напоминание</string>
-    <string name="incorrect_time_format">Некорректный формат времени</string>
-    <string name="time_text">Время напоминания</string>
-    <string name="date_text">Дата напоминания</string>
-    <string name="needs_permission">Для работы приложения нужно разрешение</string>
-    <string name="ok">OK</string>
-    <string name="url_pdf">url *.pdf</string>
-    <string name="cancel">Отмена</string>
-    <string name="camera">Камера</string>
-    <string name="gallery">Галерея</string>
 </resources>

@@ -21,4 +21,11 @@ dependencyResolutionManagement {
 
 rootProject.name = "ConsecutivePractices"
 include(":app")
- 
+include(":core")
+include(":uikit")
+include(":feature")
+include(":feature:movies")
+include(":feature:profile")
+include(":feature:favorites")
+include(":feature:movies:api")
+include(":feature:movies:impl")
