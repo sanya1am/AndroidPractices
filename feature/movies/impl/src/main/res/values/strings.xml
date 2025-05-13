@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="movie_year">Год: %s</string>
+    <string name="movie_age">Возраст: %s</string>
+    <string name="movie_rating_kp">КиноПоиск: %s</string>
+    <string name="movie_rating_imdb">IMDb: %s</string>
+    <string name="movie_length">Длительность: %s мин</string>
+    <string name="movie_genres">Жанры: %s</string>
+    <string name="movie_countries">Страны: %s</string>
+    <string name="search">Поиск</string>
+    <string name="dismiss">Отклонить</string>
+    <string name="confirm">Подтвердить</string>
+</resources>

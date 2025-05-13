@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="movie">Фильм</string>
+    <string name="tv_series">Сериал</string>
+    <string name="anime">Аниме</string>
+    <string name="cartoon">Мультфильм</string>
+    <string name="animated_series">Мультсериал</string>
+    <string name="other">Другое</string>
+</resources>
