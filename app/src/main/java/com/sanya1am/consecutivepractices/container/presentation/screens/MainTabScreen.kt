@@ -22,10 +22,12 @@ import com.github.terrakok.modo.animation.SlideTransition
 import com.github.terrakok.modo.multiscreen.MultiScreen
 import com.github.terrakok.modo.multiscreen.MultiScreenNavModel
 import com.github.terrakok.modo.multiscreen.selectScreen
+import com.sanya1am.favorites.presentation.screens.FavoritesScreen
 import kotlinx.parcelize.Parcelize
-import com.sanya1am.consecutivepractices.listWithDetails.presentation.screens.ListScreen
-import com.sanya1am.consecutivepractices.profile.presentation.screens.ProfileScreen
-import com.sanya1am.consecutivepractices.ui.theme.PrimaryColor
+import com.sanya1am.impl.presentation.screens.ListScreen
+import com.sanya1am.profile.presentation.screens.ProfileScreen
+
+import com.sanya1am.uikit.ui.theme.PrimaryColor
 
 @Parcelize
 class MainTabScreen(

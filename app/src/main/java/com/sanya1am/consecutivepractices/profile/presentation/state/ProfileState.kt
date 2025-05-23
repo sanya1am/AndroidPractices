@@ -1,9 +1,0 @@
-package com.sanya1am.consecutivepractices.profile.presentation.state
-
-import android.net.Uri
-
-interface ProfileState {
-    val name: String
-    val photoUri: Uri
-    val documentUrl: String
-}
